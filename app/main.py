@@ -23,20 +23,30 @@ import json
 
 @app.post("/analyze-claim")
 def analyze_claim(request: ClaimRequest):
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Classify insurance claims into categories: vehicle, water_damage, or unknown. Respond ONLY in valid JSON with keys: category and reason."
+                },
+                {
+                    "role": "user",
+                    "content": request.text
+                }
+            ]
+        )
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "system",
-                "content": "Classify insurance claims into categories: vehicle, water_damage, or unknown. Respond ONLY in valid JSON with keys: category and reason."
-            },
-            {
-                "role": "user",
-                "content": request.text
-            }
-        ]
-    )
+        content = response.choices[0].message.content
+        parsed = json.loads(content)
+        return parsed
+
+    except Exception as e:
+        return {
+            "error": "AI service failed",
+            "details": str(e)
+        }
 
     content = response.choices[0].message.content
 
