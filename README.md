@@ -28,3 +28,11 @@ To build a small but realistic AI service step by step.
 
 \- Git
 
+
+
+\# AI Claim Assistant
+
+
+
+This project analyzes insurance claims using AI.
+
