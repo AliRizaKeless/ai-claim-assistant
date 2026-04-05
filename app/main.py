@@ -28,7 +28,7 @@ import json
 
 @app.post("/analyze-claim")
 def analyze_claim(request: ClaimRequest):
-    logger.info(f"Received request: {request.text}")
+    logger.info(f"[NEW LOG] Incoming claim: {request.text}")
 
     try:
         response = client.chat.completions.create(
