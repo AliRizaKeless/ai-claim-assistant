@@ -1,3 +1,8 @@
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 from dotenv import load_dotenv
 import os
 
@@ -23,6 +28,8 @@ import json
 
 @app.post("/analyze-claim")
 def analyze_claim(request: ClaimRequest):
+    logger.info(f"Received request: {request.text}")
+
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -39,10 +46,13 @@ def analyze_claim(request: ClaimRequest):
         )
 
         content = response.choices[0].message.content
+        logger.info(f"AI raw response: {content}")
+
         parsed = json.loads(content)
         return parsed
 
     except Exception as e:
+        logger.error(f"Error occurred: {str(e)}")
         return {
             "error": "AI service failed",
             "details": str(e)
