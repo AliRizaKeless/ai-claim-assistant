@@ -13,12 +13,18 @@ from openai import OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
 class ClaimRequest(BaseModel):
-    text: str
+    text: str = Field(..., min_length=1)
+
+    @classmethod
+    def validate_text(cls, value):
+        if not value or not value.strip():
+            raise ValueError("Text cannot be empty")
+        return value
 
 @app.get("/")
 def read_root():
