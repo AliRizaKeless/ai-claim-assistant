@@ -59,10 +59,10 @@ def analyze_claim(request: ClaimRequest):
 
     except Exception as e:
         logger.error(f"Error occurred: {str(e)}")
+
         return {
-            "error": "AI service failed",
-            "details": str(e)
-        }
+            "error": "Something went wrong. Please try again later."
+    }
 
     content = response.choices[0].message.content
 
