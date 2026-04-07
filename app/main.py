@@ -55,6 +55,18 @@ def analyze_claim(request: ClaimRequest):
         logger.info(f"AI raw response: {content}")
 
         parsed = json.loads(content)
+
+        category = parsed.get("category", "").lower().strip().replace(" ", "_")
+
+        if any(word in category for word in ["vehicle", "car", "auto"]):
+            parsed["category"] = "vehicle"
+        elif any(word in category for word in ["water", "flood", "flooding", "leak"]):
+            parsed["category"] = "water_damage"
+        elif any(word in category for word in ["fire", "burn", "smoke"]):
+            parsed["category"] = "fire_damage"
+        else:
+            parsed["category"] = "unknown"
+
         return parsed
 
     except Exception as e:
