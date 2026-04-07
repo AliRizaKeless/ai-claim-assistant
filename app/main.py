@@ -42,7 +42,7 @@ def analyze_claim(request: ClaimRequest):
             messages=[
                 {
                     "role": "system",
-                    "content": "Classify insurance claims into categories: vehicle, water_damage, or unknown. Respond ONLY in valid JSON with keys: category and reason."
+                    "content": "You are an insurance claim classifier. Always respond ONLY in valid JSON format with exactly these keys: category and reason. Do not add markdown, explanations, or extra text."
                 },
                 {
                     "role": "user",
