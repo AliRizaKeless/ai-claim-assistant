@@ -54,7 +54,21 @@ def analyze_claim(request: ClaimRequest):
         content = response.choices[0].message.content
         logger.info(f"AI raw response: {content}")
 
-        parsed = json.loads(content)
+        try:
+            parsed = json.loads(content)
+        except Exception as e:
+            logger.error(f"JSON parsing failed: {str(e)}")
+
+            return {
+                "category": "unknown",
+                "reason": "AI response could not be parsed"
+    }
+
+        if not isinstance(parsed, dict):
+            return {
+                "category": "unknown",
+                "reason": "Invalid AI response format"
+    }
 
         category = parsed.get("category", "").lower().strip().replace(" ", "_")
 
@@ -75,12 +89,3 @@ def analyze_claim(request: ClaimRequest):
         return {
             "error": "Something went wrong. Please try again later."
     }
-
-    content = response.choices[0].message.content
-
-    try:
-        parsed = json.loads(content)
-    except:
-        parsed = {"error": "Invalid JSON from AI", "raw": content}
-
-    return parsed
