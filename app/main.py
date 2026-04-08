@@ -81,6 +81,17 @@ def analyze_claim(request: ClaimRequest):
         else:
             parsed["category"] = "unknown"
 
+        if "category" not in parsed:
+            parsed["category"] = "unknown"
+
+        if "reason" not in parsed:
+            parsed["reason"] = "No reason provided"
+
+        if not isinstance(parsed["category"], str):
+            parsed["category"] = "unknown"
+
+        if not isinstance(parsed["reason"], str):
+            parsed["reason"] = "Invalid reason format"
         return parsed
 
     except Exception as e:
