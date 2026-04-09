@@ -1,38 +1,122 @@
-\# AI Claim Assistant
+AI Claim Assistant
 
 
 
-This project is a simple AI-powered API for analyzing insurance claim descriptions.
+An AI-powered FastAPI service that classifies insurance claims into structured categories.
 
 
 
-\## Goal
-
-To build a small but realistic AI service step by step.
+Features
 
 
 
-\## First version
+\- AI-based claim classification
 
-\- Accept a claim description
+\- FastAPI backend
 
-\- Return a simple analysis result
+\- Safe JSON parsing and fallback handling
 
+\- Structured and normalized responses
 
+\- Input validation
 
-\## Tech stack
-
-\- Python
-
-\- FastAPI
-
-\- Git
+\- Detailed logging
 
 
 
-\# AI Claim Assistant
+Example Request
 
 
 
-This project analyzes insurance claims using AI.
+```json
+
+{
+
+&#x20; "text": "My car was scratched while parked"
+
+}
+
+
+
+Example Response
+
+{
+
+&#x20; "category": "vehicle",
+
+&#x20; "reason": "Damage to vehicle while parked"
+
+}
+
+
+
+Supported Categories
+
+
+
+* vehicle
+* water\_damage
+* fire\_damage
+* unknown
+
+
+
+How to Run
+
+
+
+pip install -r requirements.txt
+
+python -m uvicorn app.main:app --reload
+
+
+
+Swagger UI:
+
+
+
+http://127.0.0.1:8000/docs
+
+
+
+Error Handling
+
+
+
+* Handles invalid AI responses
+* Prevents JSON parsing crashes
+* Guarantees consistent API output
+
+
+
+Tech Stack
+
+
+
+* Python
+* FastAPI
+* OpenAI API
+* Uvicorn
+
+
+
+Project Status
+
+
+
+Production-ready backend with safe AI integration.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
