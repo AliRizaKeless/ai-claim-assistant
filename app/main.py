@@ -36,7 +36,11 @@ def read_root():
 
 import json
 
-@app.post("/analyze-claim")
+@app.post(
+    "/analyze-claim",
+    summary="Analyze insurance claim text",
+    description="Takes a claim description and returns a structured category and reason using AI"
+)
 def analyze_claim(request: ClaimRequest):
     logger.info(f"[NEW LOG] Incoming claim: {request.text}")
 
