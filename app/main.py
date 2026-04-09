@@ -15,7 +15,11 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
-app = FastAPI()
+app = FastAPI(
+    title="AI Claim Assistant",
+    description="API for classifying insurance claims using AI",
+    version="1.0.0"
+)
 
 class ClaimRequest(BaseModel):
     text: str = Field(..., min_length=1)
