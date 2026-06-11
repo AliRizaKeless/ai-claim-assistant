@@ -6,6 +6,8 @@ logger = logging.getLogger(__name__)
 from dotenv import load_dotenv
 import os
 
+from app.services.claim_service import normalize_category
+
 load_dotenv()
 
 from openai import OpenAI
@@ -78,16 +80,7 @@ def analyze_claim(request: ClaimRequest):
                 "reason": "Invalid AI response format"
     }
 
-        category = parsed.get("category", "").lower().strip().replace(" ", "_")
-
-        if any(word in category for word in ["vehicle", "car", "auto"]):
-            parsed["category"] = "vehicle"
-        elif any(word in category for word in ["water", "flood", "flooding", "leak"]):
-            parsed["category"] = "water_damage"
-        elif any(word in category for word in ["fire", "burn", "smoke"]):
-            parsed["category"] = "fire_damage"
-        else:
-            parsed["category"] = "unknown"
+        parsed["category"] = normalize_category(parsed.get("category", ""))
 
         if "category" not in parsed:
             parsed["category"] = "unknown"
