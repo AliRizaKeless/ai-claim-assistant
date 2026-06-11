@@ -6,6 +6,8 @@ logger = logging.getLogger(__name__)
 from dotenv import load_dotenv
 import os
 
+from app.schemas.claim_schema import ClaimRequest
+
 from app.services.claim_service import normalize_category
 
 load_dotenv()
@@ -15,22 +17,12 @@ from openai import OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 from fastapi import FastAPI
-from pydantic import BaseModel, Field
 
 app = FastAPI(
     title="AI Claim Assistant",
     description="API for classifying insurance claims using AI",
     version="1.0.0"
 )
-
-class ClaimRequest(BaseModel):
-    text: str = Field(..., min_length=1)
-
-    @classmethod
-    def validate_text(cls, value):
-        if not value or not value.strip():
-            raise ValueError("Text cannot be empty")
-        return value
 
 @app.get("/")
 def read_root():
