@@ -8,7 +8,7 @@ import os
 
 from app.schemas.claim_schema import ClaimRequest
 
-from app.services.claim_service import normalize_category
+from app.services.claim_service import analyze_claim_with_ai
 
 load_dotenv()
 
@@ -38,58 +38,4 @@ import json
 def analyze_claim(request: ClaimRequest):
     logger.info(f"[NEW LOG] Incoming claim: {request.text}")
 
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are an insurance claim classifier. Always respond ONLY in valid JSON format with exactly these keys: category and reason. Do not add markdown, explanations, or extra text."
-                },
-                {
-                    "role": "user",
-                    "content": request.text
-                }
-            ]
-        )
-
-        content = response.choices[0].message.content
-        logger.info(f"AI raw response: {content}")
-
-        try:
-            parsed = json.loads(content)
-        except Exception as e:
-            logger.error(f"JSON parsing failed: {str(e)}")
-
-            return {
-                "category": "unknown",
-                "reason": "AI response could not be parsed"
-    }
-
-        if not isinstance(parsed, dict):
-            return {
-                "category": "unknown",
-                "reason": "Invalid AI response format"
-    }
-
-        parsed["category"] = normalize_category(parsed.get("category", ""))
-
-        if "category" not in parsed:
-            parsed["category"] = "unknown"
-
-        if "reason" not in parsed:
-            parsed["reason"] = "No reason provided"
-
-        if not isinstance(parsed["category"], str):
-            parsed["category"] = "unknown"
-
-        if not isinstance(parsed["reason"], str):
-            parsed["reason"] = "Invalid reason format"
-        return parsed
-
-    except Exception as e:
-        logger.error(f"Error occurred: {str(e)}")
-
-        return {
-            "error": "Something went wrong. Please try again later."
-    }
+    return analyze_claim_with_ai(request.text)
