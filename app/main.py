@@ -3,6 +3,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+from app.database import create_tables
+
 from dotenv import load_dotenv
 import os
 
@@ -23,6 +25,8 @@ app = FastAPI(
     description="API for classifying insurance claims using AI",
     version="1.0.0"
 )
+
+create_tables()
 
 @app.get("/")
 def read_root():
