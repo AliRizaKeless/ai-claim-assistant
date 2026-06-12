@@ -1,3 +1,6 @@
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from app.models.session import get_db
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -18,7 +21,7 @@ from openai import OpenAI
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 
 app = FastAPI(
     title="AI Claim Assistant",
@@ -39,7 +42,7 @@ import json
     summary="Analyze insurance claim text",
     description="Takes a claim description and returns a structured category and reason using AI"
 )
-def analyze_claim(request: ClaimRequest):
+def analyze_claim(request: ClaimRequest, db: Session = Depends(get_db)):
     logger.info(f"[NEW LOG] Incoming claim: {request.text}")
 
     return analyze_claim_with_ai(request.text)

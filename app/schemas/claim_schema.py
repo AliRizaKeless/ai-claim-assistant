@@ -8,3 +8,8 @@ class ClaimRequest(BaseModel):
         example="My car was scratched while parked",
         description="Description of the insurance claim"
     )
+
+class ClaimResponse(BaseModel):
+    id: int
+    category: str
+    reason: str
