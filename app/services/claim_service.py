@@ -84,3 +84,7 @@ def save_claim(
     db.refresh(claim)
 
     return claim
+def get_all_claims(db: Session):
+    return db.query(Claim).order_by(Claim.created_at.desc()).all()
+def get_claim_by_id(db: Session, claim_id: int):
+    return db.query(Claim).filter(Claim.id == claim_id).first()

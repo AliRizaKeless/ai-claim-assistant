@@ -13,7 +13,12 @@ import os
 
 from app.schemas.claim_schema import ClaimRequest
 
-from app.services.claim_service import analyze_claim_with_ai, save_claim
+from app.services.claim_service import (
+    analyze_claim_with_ai,
+    save_claim,
+    get_all_claims,
+    get_claim_by_id
+)
 
 load_dotenv()
 
@@ -59,3 +64,15 @@ def analyze_claim(request: ClaimRequest, db: Session = Depends(get_db)):
         "category": claim.category,
         "reason": claim.reason
     }
+@app.get("/claims")
+def list_claims(db: Session = Depends(get_db)):
+    return get_all_claims(db)
+
+@app.get("/claims/{claim_id}")
+def get_claim(claim_id: int, db: Session = Depends(get_db)):
+    claim = get_claim_by_id(db, claim_id)
+
+    if not claim:
+        return {"error": "Claim not found"}
+
+    return claim
