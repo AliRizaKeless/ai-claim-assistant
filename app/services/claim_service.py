@@ -2,7 +2,8 @@ import json
 import os
 import logging
 from openai import OpenAI
-
+from app.models.claim_model import Claim
+from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -66,3 +67,20 @@ def analyze_claim_with_ai(text: str) -> dict:
             "category": "unknown",
             "reason": "AI service failed"
         }
+def save_claim(
+    db: Session,
+    claim_text: str,
+    category: str,
+    reason: str
+):
+    claim = Claim(
+        claim_text=claim_text,
+        category=category,
+        reason=reason
+    )
+
+    db.add(claim)
+    db.commit()
+    db.refresh(claim)
+
+    return claim

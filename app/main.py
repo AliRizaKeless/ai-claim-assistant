@@ -13,7 +13,7 @@ import os
 
 from app.schemas.claim_schema import ClaimRequest
 
-from app.services.claim_service import analyze_claim_with_ai
+from app.services.claim_service import analyze_claim_with_ai, save_claim
 
 load_dotenv()
 
@@ -45,4 +45,17 @@ import json
 def analyze_claim(request: ClaimRequest, db: Session = Depends(get_db)):
     logger.info(f"[NEW LOG] Incoming claim: {request.text}")
 
-    return analyze_claim_with_ai(request.text)
+    result = analyze_claim_with_ai(request.text)
+
+    claim = save_claim(
+        db=db,
+        claim_text=request.text,
+        category=result["category"],
+        reason=result["reason"]
+    )
+
+    return {
+        "id": claim.id,
+        "category": claim.category,
+        "reason": claim.reason
+    }
