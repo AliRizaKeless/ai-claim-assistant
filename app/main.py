@@ -17,7 +17,8 @@ from app.services.claim_service import (
     analyze_claim_with_ai,
     save_claim,
     get_all_claims,
-    get_claim_by_id
+    get_claim_by_id,
+    delete_claim
 )
 
 load_dotenv()
@@ -76,3 +77,14 @@ def get_claim(claim_id: int, db: Session = Depends(get_db)):
         return {"error": "Claim not found"}
 
     return claim
+
+@app.delete("/claims/{claim_id}")
+def remove_claim(claim_id: int, db: Session = Depends(get_db)):
+    claim = delete_claim(db, claim_id)
+
+    if not claim:
+        return {"error": "Claim not found"}
+
+    return {
+        "message": f"Claim {claim_id} deleted successfully"
+    }

@@ -88,3 +88,13 @@ def get_all_claims(db: Session):
     return db.query(Claim).order_by(Claim.created_at.desc()).all()
 def get_claim_by_id(db: Session, claim_id: int):
     return db.query(Claim).filter(Claim.id == claim_id).first()
+def delete_claim(db: Session, claim_id: int):
+    claim = db.query(Claim).filter(Claim.id == claim_id).first()
+
+    if not claim:
+        return None
+
+    db.delete(claim)
+    db.commit()
+
+    return claim
